@@ -4,10 +4,14 @@ Supply chain security gate for third-party packages. The first release supports 
 
 This project was directly inspired by Andrej Karpathy's March 24 tweet about the LiteLLM PyPI supply chain attack. Seeing how much damage a single `pip install` could do made me worry about my own projects and pushed me to build a practical approval gate instead of relying on blind trust in package updates.
 
+<img width="440" height="129" alt="and-tweet" src="https://github.com/user-attachments/assets/5b0daf69-9a12-442d-a94e-c5bfc77e67d5" />
+
 ## How it works
 
+![secure-packages](https://github.com/user-attachments/assets/7125d4ac-a0b4-4f04-9f34-9a6b0ed05365)
+
 ```
-requirements.txt ──> sp-client ──> server ──> Gemini CLI ──> verdict
+requirements.txt ──> sp-client ──> sp-server ──> Gemini CLI ──> verdict
                      (resolve)     (fetch)    (audit)        (approve/reject)
 ```
 
