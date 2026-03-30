@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: secure
+      POSTGRES_PASSWORD: secure
+      POSTGRES_DB: secure_packages
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U secure -d secure_packages"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SP_DATABASE__URL: postgres://secure:secure@postgres:5432/secure_packages
+      SP_DATABASE__RUN_MIGRATIONS: "true"
+      SP_SERVER__HOST: "0.0.0.0"
+      SP_SERVER__PORT: "8080"
+      SP_SERVER__ADMIN_TOKEN: "changeme"
+      SP_ANALYSIS__GEMINI_MODEL: "gemini-3-flash-preview"
+      SP_CACHE__SOURCE_CACHE_DIR: "/app/data/cache"
+      TMPDIR: "/app/data/tmp"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      RUST_LOG: "info"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3

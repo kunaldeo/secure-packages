@@ -1,0 +1,25 @@
+[server]
+host = "0.0.0.0"
+port = 8080
+admin_token = ""
+
+[database]
+url = "postgres://secure:secure@localhost:5432/secure_packages"
+max_connections = 10
+run_migrations = true
+
+[analysis]
+gemini_model = "gemini-3-flash-preview"
+gemini_timeout_seconds = 300
+max_source_size_bytes = 52428800
+
+[worker]
+concurrency = 4
+job_timeout_seconds = 600
+
+[pypi]
+upstream_index = "https://pypi.org/simple/"
+upstream_json_api = "https://pypi.org/pypi/"
+
+[cache]
+source_cache_dir = "./data/cache"
